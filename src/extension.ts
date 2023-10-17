@@ -24,6 +24,7 @@ import * as rShare from './liveShare';
 import * as httpgdViewer from './plotViewer';
 import * as languageService from './languageService';
 import { RTaskProvider } from './tasks';
+import { FlowRServerSession } from './flowr/flowrServerManager';
 
 
 // global objects used in other files
@@ -37,6 +38,7 @@ export let globalHttpgdManager: httpgdViewer.HttpgdManager | undefined = undefin
 export let rmdPreviewManager: rmarkdown.RMarkdownPreviewManager | undefined = undefined;
 export let rmdKnitManager: rmarkdown.RMarkdownKnitManager | undefined = undefined;
 export let sessionStatusBarItem: vscode.StatusBarItem | undefined = undefined;
+export let flowR: FlowRServerSession | undefined = undefined;
 
 // Called (once) when the extension is activated
 export async function activate(context: vscode.ExtensionContext): Promise<apiImplementation.RExtensionImplementation> {
@@ -57,7 +59,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<apiImp
     enableSessionWatcher = util.config().get<boolean>('sessionWatcher') ?? false;
     rmdPreviewManager = new rmarkdown.RMarkdownPreviewManager();
     rmdKnitManager = new rmarkdown.RMarkdownKnitManager();
-
+    flowR = new FlowRServerSession(vscode.window.createOutputChannel('flowR'), vscode.languages.createDiagnosticCollection('flowR'));
 
     // register commands specified in package.json
     const commands = {
@@ -145,6 +147,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<apiImp
         'r.browser.refresh': session.refreshBrowser,
         'r.browser.openExternal': session.openExternalBrowser,
 
+        // slicing
+        'r.action.slice-cursor': () => {
+            const activeEditor = vscode.window.activeTextEditor;
+            if(!activeEditor) {
+                return;
+            }
+            void flowR?.retrieveSlice(activeEditor.selection.active, activeEditor.document);
+        }
+
         // (help related commands are registered in rHelp.initializeHelp)
     };
     for (const [key, value] of Object.entries(commands)) {
@@ -205,7 +216,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<apiImp
     // register codelens and complmetion providers for r markdown
     vscode.languages.registerCodeLensProvider(['r', 'rmd'], new rmarkdown.RMarkdownCodeLensProvider());
     vscode.languages.registerCompletionItemProvider('rmd', new rmarkdown.RMarkdownCompletionItemProvider(), ' ', ',');
-
 
     // register (session) hover and completion providers
     vscode.languages.registerHoverProvider(['r', 'rmd'], new completions.HoverProvider());

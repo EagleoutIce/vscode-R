@@ -62,6 +62,7 @@
     "onCommand:r.runCommandWithEditorPath",
     "onCommand:r.runCommand",
     "onCommand:r.showHelp",
+    "onCommand:r.action.slice-cursor",
     "onCommand:r.helpPanel.back",
     "onCommand:r.helpPanel.forward",
     "onCommand:r.helpPanel.openForSelection",
@@ -386,6 +387,12 @@
       {
         "command": "editor.action.webvieweditor.showFind",
         "title": "R: Find in WebView",
+        "icon": "$(search)",
+        "category": "R"
+      },
+      {
+        "command": "r.action.slice-cursor",
+        "title": "Slice for Cursor Position",
         "icon": "$(search)",
         "category": "R"
       },
