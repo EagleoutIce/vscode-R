@@ -78,52 +78,27 @@ export class FlowRServerSession {
        // TODO: we should be more robust :D
        const sliceElements = sliceResponse.results.slice.result;
        // sort by start
-       sliceElements.sort((a, b) => {
+       sliceElements.sort((a: { location: { start: { line: number, column: number }}}, b: { location: { start: { line: number, column: number }}}) => {
            return a.location.start.line - b.location.start.line || a.location.start.column - b.location.start.column;
        });
        const diagnostics: vscode.Diagnostic[] = [];
-       let currentSource = { line: 0, column: 0 };
-       const blockingSet = new Set<string>();
+       const blockedLines = new Set<number>();
        for(const slice of sliceElements) {
-           const location = JSON.stringify(slice.location);
-           if(blockingSet.has(location)) {
-               continue;
-           }
-           blockingSet.add(location);
-           this.newDiagnostics(diagnostics, currentSource, slice);
-           currentSource = {
-               line: slice.location.end.line - 1,
-               column: slice.location.end.column
-           };
+           blockedLines.add(slice.location.start.line - 1);
        }
-       const end = {
-           line: document.lineCount,
-           column: document.lineAt(document.lineCount - 1).text.length + 1
-       };
-       this.newDiagnostics(diagnostics, currentSource, {
-           id: 'end',
-           location: {
-               start: end,
-               end
-           }
-       });
+       for(let i = 0; i < document.lineCount; i++) {
+            if(blockedLines.has(i)) {
+                continue;
+            }
+            diagnostics.push({
+                message: 'irrelevant for the slice',
+                range: new vscode.Range(i, 0, i, document.lineAt(i).text.length),
+                severity: vscode.DiagnosticSeverity.Hint,
+                tags: [vscode.DiagnosticTag.Unnecessary]
+            });
+       }
        this.collection.set(uri, diagnostics);
        this.outputChannel.appendLine('slice: ' + JSON.stringify(sliceResponse.results.slice.result));
        return '';
-   }
-
-
-   private newDiagnostics(diagnostics: vscode.Diagnostic[], currentSource: { line: number; column: number; }, slice: SliceResult) {
-       const range = new vscode.Range(currentSource.line, currentSource.column, slice.location.start.line - 1, slice.location.start.column-1);
-       this.outputChannel.appendLine('newDiagnostics: ' + JSON.stringify(range) + ' ' +  JSON.stringify(slice));
-       if(range.isEmpty) {
-           return;
-       }
-       diagnostics.push({
-           message: 'irrelevant for the slice',
-           range,
-           severity: vscode.DiagnosticSeverity.Hint,
-           tags: [vscode.DiagnosticTag.Unnecessary]
-       });
    }
 }
