@@ -121,7 +121,6 @@ export class FlowRServerSession {
        }
        diagnostics.push({
            message: 'irrelevant for the slice',
-           // TODO: invert!
            range,
            severity: vscode.DiagnosticSeverity.Hint,
            tags: [vscode.DiagnosticTag.Unnecessary]
