@@ -66,7 +66,8 @@ export class FlowRServerSession {
    async retrieveSlice(pos: vscode.Position, document: vscode.TextDocument): Promise<string> {
        const filename = document.fileName;
        const content = document.getText();
-       const uri = document.uri;
+       const uri = document.uri.with({scheme: 'flowr-diagnostic'});
+
        // TODO: allow to clear filetokens again? With this we just overwrite :D
        const response = await this.sendCommandWithResponse<FileAnalysisResponseMessageJson>({
            type:      'request-file-analysis',

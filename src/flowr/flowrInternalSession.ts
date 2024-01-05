@@ -33,7 +33,7 @@ export class FlowrInternalSession {
         this.outputChannel.appendLine(`Using R shell: ${JSON.stringify(await shell.usedRVersion())}`);
         const filename = document.fileName;
         const content = document.getText();
-        const uri = document.uri;
+        const uri = document.uri.with({scheme: 'flowr-diagnostic'});
 
         const slicer = new SteppingSlicer({
             criterion: [`${pos.line + 1}:${pos.character + 1}`],
@@ -54,6 +54,7 @@ export class FlowrInternalSession {
         sliceElements.sort((a: { location: SourceRange }, b: { location: SourceRange }) => {
             return a.location.start.line - b.location.start.line || a.location.start.column - b.location.start.column;
         });
+
         const diagnostics: vscode.Diagnostic[] = [];
         const blockedLines = new Set<number>();
         for (const slice of sliceElements) {
