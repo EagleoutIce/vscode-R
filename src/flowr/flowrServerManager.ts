@@ -1,7 +1,15 @@
 import * as net from 'net';
 import * as vscode from 'vscode';
-import { FileAnalysisResponseMessageJson, FlowrMessage, SliceResponseMessage, SliceResult } from './messages';
+import {FlowrMessage} from '@eagleoutice/flowr/cli/repl';
+import {FileAnalysisResponseMessageJson} from '@eagleoutice/flowr/cli/repl/server/messages/analysis';
+import {SliceResponseMessage} from '@eagleoutice/flowr/cli/repl/server/messages/slice';
+import {NodeId, visitAst} from '@eagleoutice/flowr';
+import {SourceRange} from '@eagleoutice/flowr/util/range';
+import {isNotUndefined} from '@eagleoutice/flowr/util/assert';
 
+/**
+ * Just a proof of concept for now.
+ */
 export class FlowRServerSession {
    private readonly port: number;
    private readonly host: string;
@@ -68,6 +76,15 @@ export class FlowRServerSession {
            filetoken: '@tmp',
            content
        });
+
+       // now we want to collect all ids from response in a map again (id -> location)
+       const idToLocation = new Map<NodeId, SourceRange>();
+       visitAst(response.results.normalize.ast, n => {
+           if(n.location) {
+               idToLocation.set(n.info.id, n.location);
+           }
+       });
+
        // TODO: check for errors etc
        const sliceResponse = await this.sendCommandWithResponse<SliceResponseMessage>({
            'type':      'request-slice',
@@ -76,9 +93,10 @@ export class FlowRServerSession {
            'criterion': [`${pos.line+1}:${pos.character+1}`]
        });
        // TODO: we should be more robust :D
-       const sliceElements = sliceResponse.results.slice.result;
+       const sliceElements = [...sliceResponse.results.slice.result].map(id => ({id, location: idToLocation.get(id)}))
+           .filter(e => isNotUndefined(e.location)) as {id: NodeId, location: SourceRange}[];
        // sort by start
-       sliceElements.sort((a: { location: { start: { line: number, column: number }}}, b: { location: { start: { line: number, column: number }}}) => {
+       sliceElements.sort((a: { location: SourceRange}, b: { location: SourceRange}) => {
            return a.location.start.line - b.location.start.line || a.location.start.column - b.location.start.column;
        });
        const diagnostics: vscode.Diagnostic[] = [];
@@ -87,15 +105,15 @@ export class FlowRServerSession {
            blockedLines.add(slice.location.start.line - 1);
        }
        for(let i = 0; i < document.lineCount; i++) {
-            if(blockedLines.has(i)) {
-                continue;
-            }
-            diagnostics.push({
-                message: 'irrelevant for the slice',
-                range: new vscode.Range(i, 0, i, document.lineAt(i).text.length),
-                severity: vscode.DiagnosticSeverity.Hint,
-                tags: [vscode.DiagnosticTag.Unnecessary]
-            });
+           if(blockedLines.has(i)) {
+               continue;
+           }
+           diagnostics.push({
+               message: 'irrelevant for the slice',
+               range: new vscode.Range(i, 0, i, document.lineAt(i).text.length),
+               severity: vscode.DiagnosticSeverity.Hint,
+               tags: [vscode.DiagnosticTag.Unnecessary]
+           });
        }
        this.collection.set(uri, diagnostics);
        this.outputChannel.appendLine('slice: ' + JSON.stringify(sliceResponse.results.slice.result));

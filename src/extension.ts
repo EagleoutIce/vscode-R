@@ -25,6 +25,7 @@ import * as httpgdViewer from './plotViewer';
 import * as languageService from './languageService';
 import { RTaskProvider } from './tasks';
 import { FlowRServerSession } from './flowr/flowrServerManager';
+import {FlowrInternalSession} from './flowr/flowrInternalSession';
 
 
 // global objects used in other files
@@ -38,7 +39,7 @@ export let globalHttpgdManager: httpgdViewer.HttpgdManager | undefined = undefin
 export let rmdPreviewManager: rmarkdown.RMarkdownPreviewManager | undefined = undefined;
 export let rmdKnitManager: rmarkdown.RMarkdownKnitManager | undefined = undefined;
 export let sessionStatusBarItem: vscode.StatusBarItem | undefined = undefined;
-export let flowR: FlowRServerSession | undefined = undefined;
+export let flowR: FlowRServerSession | FlowrInternalSession | undefined = undefined;
 
 // Called (once) when the extension is activated
 export async function activate(context: vscode.ExtensionContext): Promise<apiImplementation.RExtensionImplementation> {
@@ -59,7 +60,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<apiImp
     enableSessionWatcher = util.config().get<boolean>('sessionWatcher') ?? false;
     rmdPreviewManager = new rmarkdown.RMarkdownPreviewManager();
     rmdKnitManager = new rmarkdown.RMarkdownKnitManager();
-    flowR = new FlowRServerSession(vscode.window.createOutputChannel('flowR'), vscode.languages.createDiagnosticCollection('flowR'));
+    flowR = new FlowrInternalSession(vscode.window.createOutputChannel('flowR'), vscode.languages.createDiagnosticCollection('flowR'));
+    // new FlowRServerSession(vscode.window.createOutputChannel('flowR'), vscode.languages.createDiagnosticCollection('flowR'));
 
     // register commands specified in package.json
     const commands = {
