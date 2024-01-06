@@ -20,6 +20,9 @@ export class FlowrInternalSession {
             sessionName: 'flowr - vscode'
         })
         this.shell.tryToInjectHomeLibPath();
+        void this.shell.usedRVersion().then(version => {
+            this.outputChannel.appendLine(`Using R shell: ${JSON.stringify(version)}`);
+        })
         process.on('exit', () => {
             this.shell.close();
         })
@@ -44,7 +47,6 @@ export class FlowrInternalSession {
     }
 
     private async extractSlice(shell: RShell, document: vscode.TextDocument, pos: vscode.Position) {
-        this.outputChannel.appendLine(`Using R shell: ${JSON.stringify(await shell.usedRVersion())}`);
         const filename = document.fileName;
         const content = document.getText();
         const uri = document.uri;
@@ -86,6 +88,7 @@ export class FlowrInternalSession {
             });
         }
         this.collection.set(uri, diagnostics);
-        this.outputChannel.appendLine('slice: ' + JSON.stringify(result.slice.result));
+        this.outputChannel.appendLine('slice: ' + JSON.stringify([...result.slice.result]));
+        this.outputChannel.appendLine('reconstructed:\n' + result.reconstruct.code);
     }
 }
