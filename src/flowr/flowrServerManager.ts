@@ -6,6 +6,7 @@ import { SliceResponseMessage } from '@eagleoutice/flowr/cli/repl/server/message
 import { NodeId, visitAst } from '@eagleoutice/flowr';
 import { SourceRange } from '@eagleoutice/flowr/util/range';
 import { isNotUndefined } from '@eagleoutice/flowr/util/assert';
+import { FlowrInternalSession } from './flowrInternalSession';
 
 /**
  * Just a proof of concept for now.
@@ -72,6 +73,8 @@ export class FlowRServerSession {
         const filename = document.fileName;
         const content = document.getText();
         const uri = document.uri;
+
+        pos = FlowrInternalSession.getPositionAt(pos, document)?.start ?? pos;
 
         // TODO: allow to clear filetokens again? With this we just overwrite :D
         const response = await this.sendCommandWithResponse<FileAnalysisResponseMessageJson>({

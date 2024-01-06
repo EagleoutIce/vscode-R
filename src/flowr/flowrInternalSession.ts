@@ -46,10 +46,22 @@ export class FlowrInternalSession {
         this.collection.delete(document.uri);
     }
 
+    public static getPositionAt(position: vscode.Position, document: vscode.TextDocument): vscode.Range | undefined {
+        const re = /([a-zA-Z0-9._:])+/;
+        const wordRange = document.getWordRangeAtPosition(position, re);
+        return wordRange;
+    }
+
     private async extractSlice(shell: RShell, document: vscode.TextDocument, pos: vscode.Position) {
         const filename = document.fileName;
         const content = document.getText();
         const uri = document.uri;
+
+        const range = FlowrInternalSession.getPositionAt(pos, document);
+        pos = range?.start ?? pos;
+        this.outputChannel.appendLine(`Extracting slice at ${pos.line + 1}:${pos.character + 1} in ${filename}`);
+        const token = document.getText(range);
+        this.outputChannel.appendLine(`Token: ${token}`);
 
         const slicer = new SteppingSlicer({
             criterion: [`${pos.line + 1}:${pos.character + 1}`],
@@ -81,7 +93,7 @@ export class FlowrInternalSession {
                 continue;
             }
             diagnostics.push({
-                message: 'irrelevant for the slice',
+                message: `irrelevant when slicing for '${token}' (line: ${pos.line + 1}, char: ${pos.character + 1})`,
                 range: new vscode.Range(i, 0, i, document.lineAt(i).text.length),
                 severity: vscode.DiagnosticSeverity.Hint,
                 tags: [vscode.DiagnosticTag.Unnecessary]
