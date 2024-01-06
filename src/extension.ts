@@ -62,7 +62,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<apiImp
     rmdKnitManager = new rmarkdown.RMarkdownKnitManager();
     flowR = new FlowrInternalSession(vscode.window.createOutputChannel('flowR'), vscode.languages.createDiagnosticCollection('flowR'));
     // new FlowRServerSession(vscode.window.createOutputChannel('flowR'), vscode.languages.createDiagnosticCollection('flowR'));
-
     // register commands specified in package.json
     const commands = {
         // create R terminal
@@ -175,7 +174,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<apiImp
 
     // keep track of terminals
     context.subscriptions.push(vscode.window.onDidCloseTerminal(rTerminal.deleteTerminal));
-
     // start language service
     if (util.config().get<boolean>('lsp.enabled')) {
         const lsp = vscode.extensions.getExtension('reditorsupport.r-lsp');

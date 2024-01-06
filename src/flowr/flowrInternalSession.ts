@@ -9,22 +9,32 @@ import { isNotUndefined } from '@eagleoutice/flowr/util/assert';
 export class FlowrInternalSession {
     private readonly outputChannel: vscode.OutputChannel;
     private readonly collection: vscode.DiagnosticCollection;
+    private readonly shell: RShell;
 
     constructor(outputChannel: vscode.OutputChannel, collection: vscode.DiagnosticCollection) {
         this.outputChannel = outputChannel;
         this.outputChannel.appendLine(`Using internal FlowR!`);
         this.collection = collection;
+        this.shell = new RShell({
+            revive: 'always',
+            sessionName: 'flowr - vscode'
+        })
+        this.shell.tryToInjectHomeLibPath();
+        process.on('exit', () => {
+            this.shell.close();
+        })
+        process.on('SIGINT', () => {
+            this.shell.close();
+        })
     }
 
     // TODO: caching etc.
     async retrieveSlice(pos: vscode.Position, document: vscode.TextDocument): Promise<string> {
         // TODO: do not use a shell per slice?
-        const shell = new RShell();
-        shell.tryToInjectHomeLibPath();
         try {
-            await this.extractSlice(shell, document, pos);
-        } finally {
-            shell.close();
+            await this.extractSlice(this.shell, document, pos);
+        } catch(e) {
+            this.outputChannel.appendLine('Error: ' + e);
         }
         return '';
     }
