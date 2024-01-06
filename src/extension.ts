@@ -156,6 +156,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<apiImp
                 return;
             }
             void flowR?.retrieveSlice(activeEditor.selection.active, activeEditor.document);
+        },
+
+        'r.action.clear-slice': () => {
+            const activeEditor = vscode.window.activeTextEditor;
+            if(!activeEditor) {
+                return;
+            }
+            void flowR?.clearSlice(activeEditor.document);
         }
 
         // (help related commands are registered in rHelp.initializeHelp)

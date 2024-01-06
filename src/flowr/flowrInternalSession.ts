@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import {LAST_STEP, NodeId, requestFromInput, RShell, SteppingSlicer} from '@eagleoutice/flowr';
-import {SourceRange} from '@eagleoutice/flowr/util/range';
-import {isNotUndefined} from '@eagleoutice/flowr/util/assert';
+import { LAST_STEP, NodeId, requestFromInput, RShell, SteppingSlicer } from '@eagleoutice/flowr';
+import { SourceRange } from '@eagleoutice/flowr/util/range';
+import { isNotUndefined } from '@eagleoutice/flowr/util/assert';
 
 /**
  * Just a proof of concept for now.
@@ -29,11 +29,15 @@ export class FlowrInternalSession {
         return '';
     }
 
+    async clearSlice(document: vscode.TextDocument) {
+        this.collection.delete(document.uri);
+    }
+
     private async extractSlice(shell: RShell, document: vscode.TextDocument, pos: vscode.Position) {
         this.outputChannel.appendLine(`Using R shell: ${JSON.stringify(await shell.usedRVersion())}`);
         const filename = document.fileName;
         const content = document.getText();
-        const uri = document.uri.with({scheme: 'flowr-diagnostic'});
+        const uri = document.uri;
 
         const slicer = new SteppingSlicer({
             criterion: [`${pos.line + 1}:${pos.character + 1}`],
@@ -49,19 +53,19 @@ export class FlowrInternalSession {
             id,
             location: result.normalize.idMap.get(id)?.location
         }))
-            .filter(e => isNotUndefined(e.location)) as { id: NodeId, location: SourceRange }[];
+            .filter(e => isNotUndefined(e.location)) as { id: NodeId, location: SourceRange; }[];
         // sort by start
-        sliceElements.sort((a: { location: SourceRange }, b: { location: SourceRange }) => {
+        sliceElements.sort((a: { location: SourceRange; }, b: { location: SourceRange; }) => {
             return a.location.start.line - b.location.start.line || a.location.start.column - b.location.start.column;
         });
 
         const diagnostics: vscode.Diagnostic[] = [];
         const blockedLines = new Set<number>();
-        for (const slice of sliceElements) {
+        for(const slice of sliceElements) {
             blockedLines.add(slice.location.start.line - 1);
         }
-        for (let i = 0; i < document.lineCount; i++) {
-            if (blockedLines.has(i)) {
+        for(let i = 0; i < document.lineCount; i++) {
+            if(blockedLines.has(i)) {
                 continue;
             }
             diagnostics.push({

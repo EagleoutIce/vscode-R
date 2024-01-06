@@ -63,6 +63,7 @@
     "onCommand:r.runCommand",
     "onCommand:r.showHelp",
     "onCommand:r.action.slice-cursor",
+    "onCommand:r.action.clear-slice",
     "onCommand:r.helpPanel.back",
     "onCommand:r.helpPanel.forward",
     "onCommand:r.helpPanel.openForSelection",
@@ -394,6 +395,12 @@
         "command": "r.action.slice-cursor",
         "title": "Slice for Cursor Position",
         "icon": "$(search)",
+        "category": "R"
+      },
+      {
+        "command": "r.action.clear-slice",
+        "title": "Clear Slice Presentation",
+        "icon": "$(refresh)",
         "category": "R"
       },
       {
@@ -1261,6 +1268,10 @@
         },
         {
           "command": "r.action.slice-cursor",
+          "when": "resourceLangId == r"
+        },
+        {
+          "command": "r.action.clear-slice",
           "when": "resourceLangId == r"
         }
       ],
