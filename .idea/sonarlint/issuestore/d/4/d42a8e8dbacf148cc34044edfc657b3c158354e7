@@ -1,13 +1,12 @@
 
 ptypescript:S3776-"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(’ÎĞ‘
-Atypescript:S125@"Remove this commented out code.(ì˜Î8³•ÉßÍ1
-Htypescript:S3735Y"'Remove this use of the "void" operator.(ˆŒıÿÿÿÿ
-Ctypescript:S4623Y""Remove this redundant "undefined".(ˆŒıÿÿÿÿ
-Ctypescript:S3735Z"'Remove this use of the "void" operator.(çı®
-Ctypescript:S3735["'Remove this use of the "void" operator.(“¤¶²
-Htypescript:S3735\"'Remove this use of the "void" operator.(ËÉí´ÿÿÿÿÿ
-Htypescript:S3735n"'Remove this use of the "void" operator.(³Ä¼èÿÿÿÿÿ
-Dtypescript:S3735"'Remove this use of the "void" operator.(…•”ı
-Dtypescript:S3735¦"'Remove this use of the "void" operator.(“ğ·Ğ
-Itypescript:S3735ö"'Remove this use of the "void" operator.(…Ğ«ìşÿÿÿÿ
-Jtypescript:S3735€"'Remove this use of the "void" operator.(‹‘Ç`8°£ÕàÍ1
+Htypescript:S3735X"'Remove this use of the "void" operator.(ˆŒıÿÿÿÿ
+Jtypescript:S4623X""Remove this redundant "undefined".(ˆŒıÿÿÿÿ8úœáÍ1
+Jtypescript:S3735Y"'Remove this use of the "void" operator.(çı®8°£ÕàÍ1
+Jtypescript:S3735Z"'Remove this use of the "void" operator.(“¤¶²8úœáÍ1
+Otypescript:S3735["'Remove this use of the "void" operator.(ËÉí´ÿÿÿÿÿ8úœáÍ1
+Otypescript:S3735m"'Remove this use of the "void" operator.(³Ä¼èÿÿÿÿÿ8úœáÍ1
+Ktypescript:S3735"'Remove this use of the "void" operator.(…•”ı8úœáÍ1
+Ktypescript:S3735¥"'Remove this use of the "void" operator.(“ğ·Ğ8úœáÍ1
+Ptypescript:S3735ô"'Remove this use of the "void" operator.(…Ğ«ìşÿÿÿÿ8ûœáÍ1
+Jtypescript:S3735ş"'Remove this use of the "void" operator.(‹‘Ç`8ûœáÍ1

@@ -163,6 +163,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<apiImp
                 return;
             }
             void flowR?.clearSlice(activeEditor.document);
+        },
+
+        'r.action.slice-cursor-reconstruct': () => {
+            const activeEditor = vscode.window.activeTextEditor;
+            if(!activeEditor) {
+                return;
+            }
+            flowR?.retrieveSlice(activeEditor.selection.active, activeEditor.document).then(code => {
+                vscode.workspace.openTextDocument({language: 'r', content: code}).then((v) => vscode.window.showTextDocument(v));
+                // const view = vscode.window.createWebviewPanel('rSlice', 'R Slice', vscode.ViewColumn.Beside)
+                // view.webview.html = code;
+            });
         }
 
         // (help related commands are registered in rHelp.initializeHelp)

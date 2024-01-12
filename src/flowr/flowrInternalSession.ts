@@ -35,11 +35,10 @@ export class FlowrInternalSession {
     async retrieveSlice(pos: vscode.Position, document: vscode.TextDocument): Promise<string> {
         // TODO: do not use a shell per slice?
         try {
-            await this.extractSlice(this.shell, document, pos);
+            return await this.extractSlice(this.shell, document, pos);
         } catch(e) {
             this.outputChannel.appendLine('Error: ' + e);
         }
-        return '';
     }
 
     async clearSlice(document: vscode.TextDocument) {
@@ -52,9 +51,11 @@ export class FlowrInternalSession {
         return wordRange;
     }
 
-    private async extractSlice(shell: RShell, document: vscode.TextDocument, pos: vscode.Position) {
+    private async extractSlice(shell: RShell, document: vscode.TextDocument, pos: vscode.Position): Promise<string> {
         const filename = document.fileName;
-        const content = document.getText();
+        // hackey way to deal with various encodings
+        let content = document.getText().replace(/[^\x00-\x7F]/g,"");
+        content = content.replace(/\r\n/g, '\n');
         const uri = document.uri;
 
         const range = FlowrInternalSession.getPositionAt(pos, document);
@@ -101,6 +102,6 @@ export class FlowrInternalSession {
         }
         this.collection.set(uri, diagnostics);
         this.outputChannel.appendLine('slice: ' + JSON.stringify([...result.slice.result]));
-        this.outputChannel.appendLine('reconstructed:\n' + result.reconstruct.code);
+        return result.reconstruct.code;
     }
 }

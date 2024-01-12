@@ -398,6 +398,12 @@
         "category": "R"
       },
       {
+        "command": "r.action.slice-cursor-reconstruct",
+        "title": "Slice for Cursor Position (Reconstruct)",
+        "icon": "$(run)",
+        "category": "R"
+      },
+      {
         "command": "r.action.clear-slice",
         "title": "Clear Slice Presentation",
         "icon": "$(refresh)",

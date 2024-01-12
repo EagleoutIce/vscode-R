@@ -69,6 +69,7 @@ export class FlowRServerSession {
     }
 
     // TODO: caching etc.
+    // returns the reconstructed code
     async retrieveSlice(pos: vscode.Position, document: vscode.TextDocument): Promise<string> {
         const filename = document.fileName;
         const content = document.getText();
@@ -126,6 +127,6 @@ export class FlowRServerSession {
         }
         this.collection.set(uri, diagnostics);
         this.outputChannel.appendLine('slice: ' + JSON.stringify([...sliceResponse.results.slice.result]));
-        return '';
+        return sliceResponse.results.reconstruct.code;
     }
 }
