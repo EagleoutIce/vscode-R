@@ -38,6 +38,8 @@ export class FlowrInternalSession {
             return await this.extractSlice(this.shell, document, pos);
         } catch(e) {
             this.outputChannel.appendLine('Error: ' + e);
+            (e as Error).stack?.split('\n').forEach(l => this.outputChannel.appendLine(l));
+            return '';
         }
     }
 

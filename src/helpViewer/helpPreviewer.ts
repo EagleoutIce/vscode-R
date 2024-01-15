@@ -146,8 +146,8 @@ export class RLocalHelpPreviewer {
             this.cachedPackageInfo = undefined;
             this.callPreviewListener();
         };
-        const manDirListener: fs.WatchListener<string> = (event: fs.WatchEventType, filename: string) => {
-            if(this.isDisposed){
+        const manDirListener: fs.WatchListener<string> = (event: fs.WatchEventType, filename: string | null) => {
+            if(this.isDisposed || filename === null){
                 return;
             }
             if(!isDirSafe(this.manDir)){
@@ -409,7 +409,7 @@ function extractRPaths(rdTxt: string): string[] | undefined {
     if(firstRealLine >= 0){
         lines.splice(firstRealLine);
     }
-    
+
     // Join lines that were split (these start with "%   ")
     const CONTINUED_LINE_START = '%   ';
     const longLines = [];
@@ -420,7 +420,7 @@ function extractRPaths(rdTxt: string): string[] | undefined {
             longLines.push(line);
         }
     }
-    
+
     // Find the line that references R files
     for(const line of longLines){
         const rFileMatch = line.match(/^% Please edit documentation in (.*)$/);

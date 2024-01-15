@@ -43,11 +43,12 @@
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.3.tgz"
   integrity sha512-Fxt+AfXgjMoin2maPIYzFZnQjAXjAL0PHscM5pRTtatFqB+vZxAM9tLp2Optnuw3QOQC40jTNeGYFOMvyf7v9g==
 
-"@eagleoutice/flowr@^1.3.12":
-  version "1.3.12"
-  resolved "https://registry.yarnpkg.com/@eagleoutice/flowr/-/flowr-1.3.12.tgz#4bbb70ebefaff17a66533359606a108dfa0c99c3"
-  integrity sha512-tn+B5D/88l2PsmiybCfS2eg/XIMWvBoUiqpcFcU0C7WdBvNf0AnSQ4dWkvqucpwDpC2dr3iwWmCkBS4uEzZ0/w==
+"@eagleoutice/flowr@^1.3.14":
+  version "1.3.14"
+  resolved "https://registry.yarnpkg.com/@eagleoutice/flowr/-/flowr-1.3.14.tgz#7f6a9abc1799c340e49b5f47c4b7158a821970ab"
+  integrity sha512-41mC4hOwTnhhv6Ms4nIEBLZ822ZC+C/U/7zZXurH5r7zgPDYNTJAJntD8Wd8NoosuIMd7uehltmBooVHL8ftJg==
   dependencies:
+    "@types/semver" "^7.5.6"
     "@types/tar" "^6.1.10"
     "@xmldom/xmldom" "^0.8.10"
     command-line-args "^5.2.1"
@@ -61,6 +62,7 @@
     semver "^7.5.4"
     tar "^6.2.0"
     tmp "^0.2.1"
+    ts-essentials "^9.4.1"
     tslog "^4.9.2"
     xml2js "^0.6.2"
     xpath-ts2 "^1.4.2"
@@ -369,9 +371,9 @@
   integrity sha512-zjQ69G564OCIWIOHSXyQEEDpdpGl+G348RAKY0XXy9Z5kU9Vzv1GMNnkar/ZJ8dzXB3COzD9Mo9NtRZ4xfgUww==
 
 "@types/node@^16.11.7":
-  version "16.11.47"
-  resolved "https://registry.npmjs.org/@types/node/-/node-16.11.47.tgz"
-  integrity sha512-fpP+jk2zJ4VW66+wAMFoBJlx1bxmBKx4DUFf68UHgdGCOuyUTDlLWqsaNPJh7xhNDykyJ9eIzAygilP/4WoN8g==
+  version "16.18.71"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.71.tgz#305a955ab99353d4b8a9e9b6b6682ed6cbc186cc"
+  integrity sha512-ARO+458bNJQeNEFuPyT6W+q9ULotmsQzhV3XABsFSxEvRMUYENcBsNAHWYPlahU+UHa5gCVwyKT1Z3f1Wwr26Q==
 
 "@types/qs@*":
   version "6.9.6"
@@ -382,6 +384,11 @@
   version "1.2.3"
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.3.tgz"
   integrity sha512-ewFXqrQHlFsgc09MK5jP5iR7vumV/BYayNC6PgJO2LPe8vrnNFyjQjSppfEngITi0qvfKtzFvgKymGheFM9UOA==
+
+"@types/semver@^7.5.6":
+  version "7.5.6"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.6.tgz#c65b2bfce1bec346582c07724e3f8c1017a20339"
+  integrity sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==
 
 "@types/serve-static@*":
   version "1.13.9"
@@ -3062,6 +3069,11 @@ tr46@~0.0.3:
   version "0.3.9"
   resolved "https://registry.npmjs.org/traverse/-/traverse-0.3.9.tgz"
   integrity sha512-iawgk0hLP3SxGKDfnDJf8wTz4p2qImnyihM5Hh/sGvQ3K37dPi/w8sRhdNIxYA1TwFwc5mDhIJq+O0RsvXBKdQ==
+
+ts-essentials@^9.4.1:
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/ts-essentials/-/ts-essentials-9.4.1.tgz#6a6b6f81c2138008a5eef216e9fa468d8d9e2ab4"
+  integrity sha512-oke0rI2EN9pzHsesdmrOrnqv1eQODmJpd/noJjwj2ZPC3Z4N2wbjrOEqnsEgmvlO2+4fBb0a794DCna2elEVIQ==
 
 ts-loader@^9.3.1:
   version "9.3.1"
